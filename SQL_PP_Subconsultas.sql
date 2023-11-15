@@ -49,6 +49,32 @@ where c.country <> s.country;
 Extraed el OrderId y el nombre del cliente que pidieron más de 20 artículos del producto "Grandma's Boysenberry Spread" (ProductID 6) en un solo pedido.
 Resultado de nuestra query deberíamos tener una tabla como esta:*/
 
+
+
+SELECT order_id, customer_id
+FROM orders
+WHERE order_id IN (
+	SELECT od.order_id
+		FROM order_details AS od
+		WHERE od.product_id = 6
+		GROUP BY od.order_id
+		HAVING SUM(od.quantity) > 20);
+
+
+
+
+
+
+
+
+SELECT distinct product_id, unit_price as Max_Unit_Price
+from order_details
+where (product_id, unit_price) in 
+	(select product_id, MAX(unit_price)
+	from order_details
+	group by product_id)
+order by product_id ASC;
+
 /*6.Extraed los 10 productos más caros
 Nos siguen pidiendo más queries correlacionadas. En este caso queremos saber cuáles son los 10 productos más caros.
 Los resultados esperados de esta query son:*/
