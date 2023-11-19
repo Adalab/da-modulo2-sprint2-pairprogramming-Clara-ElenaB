@@ -64,6 +64,13 @@ Adicionalmente nos piden detalles de aquellos productos no descontinuados, sobre
 Como puede que salgan demasiados resultados, nos piden que los limitemos a los 10 con ID más elevado, que serán los más recientes.
  No nos pueden decir del departamento si habrá pocos o muchos resultados, pero lo limitamos por si acaso.*/
  
+SELECT `product_id`, `product_name`
+FROM `products`
+WHERE `discontinued` = 0
+LIMIT  10;
+
+ 
+ 
  
  
  /*7 Relación entre número de pedidos y máxima carga:
@@ -77,6 +84,10 @@ GROUP BY `employee_id`;
 /*8- Descartar pedidos sin fecha y ordénalos:
 Una vez han revisado los datos de la consulta anterior, nos han pedido afinar un poco más el "disparo". En el resultado anterior se han incluido muchos pedidos cuya fecha
 de envío estaba vacía, por lo que tenemos que mejorar la consulta en este aspecto. También nos piden que ordenemos los resultados según el ID de empleado para que la visualización sea más sencilla. */
+SELECT `employee_id`, COUNT(`order_id`), MAX(`freight`) AS `peso_maximo`, MAX(`shipped_date`) AS `fecha_envio`
+FROM `orders`
+GROUP BY `employee_id`
+HAVING  MAX(`shipped_date`) IS NOT NULL;
 
 
 /* 9 -  Números de pedidos por día:
@@ -93,6 +104,10 @@ GROUP BY `order_date`;
 La consulta anterior nos muestra el número de pedidos para cada día concreto, pero esto es demasiado detalle. 
 Genera una modificación de la consulta anterior para que agrupe los pedidos por cada mes concreto de cada año.*/
 
+SELECT month(`order_date`) AS `mes`,  year(`order_date`) AS `año`, COUNT(`order_id`) AS `total_pedidos`
+FROM `orders`
+GROUP BY `mes`, `año`; 
+-- se tienen que agrupar las dos columnas para que se cumpla la agrupación mes/año
 
 /* 11 Seleccionad las ciudades con 4 o más empleadas:
 Desde recursos humanos nos piden seleccionar los nombres de las ciudades con 4 o más empleadas de cara a estudiar la apertura de nuevas oficinas. */
