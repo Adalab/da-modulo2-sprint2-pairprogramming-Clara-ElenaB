@@ -100,12 +100,34 @@ GROUP BY c.category_name;
 /* 7 La empresa nos ha pedido que busquemos el nombre de cliente, su teléfono y el número de pedidos
  que ha hecho cada uno de ellos.*/
 
-SELECT  
+with base as (select order_id,customer_id
+from orders)
+
+select c.company_name, c.phone, count(b.order_id) as nº_orders
+from customers as c join base as b on c.customer_id = b.customer_id
+group by c.company_name, c.phone;
+
+  
+/* 8 Modifica la consulta anterior para obtener los mismos resultados pero con los pedidos por año que ha hecho cada cliente.*/
+with base as (select order_id,customer_id, order_date 
+from orders)
+
+select c.company_name, c.phone, b.order_id as nº_orders,  date_format(b.order_date , "%Y") as año
+from customers as c join base as b on c.customer_id = b.customer_id ;
+
+/* 9 Modifica la cte del ejercicio anterior, úsala en una subconsulta para saber el nombre del cliente y su teléfono, para aquellos clientes que hayan hecho más de 6 pedidos en el año 1998.*/
+with base as (select order_id,customer_id, order_date 
+from orders)
+
+select c.company_name, c.phone, b.order_id as nº_orders,b.order_date as año
+from customers as c join base as b on c.customer_id = b.customer_id 
+where (b.order_id, b.order_date) in 
+		(select count(b.order_id), date_format(b.order_date , "%Y") 
+		from base 
+		where b.order_id > 6 and date_format(b.order_date , "%Y") = 1998)
+group by c.company_name, c.phone,b.order_date;
 
 
 
-
-/*Modifica la consulta anterior para obtener los mismos resultados pero con los pedidos por año que ha hecho cada cliente.
-/*Modifica la cte del ejercicio anterior, úsala en una subconsulta para saber el nombre del cliente y su teléfono, para aquellos clientes que hayan hecho más de 6 pedidos en el año 1998.
-/*Nos piden que obtengamos el importe total (teniendo en cuenta los descuentos) de cada pedido de la tabla orders y el customer_id asociado a cada pedido.*/
+/* 10 Nos piden que obtengamos el importe total (teniendo en cuenta los descuentos) de cada pedido de la tabla orders y el customer_id asociado a cada pedido.*/
 
