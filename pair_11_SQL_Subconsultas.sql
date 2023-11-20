@@ -61,12 +61,6 @@ WHERE order_id IN (
 		HAVING SUM(od.quantity) > 20);
 
 
-
-
-
-
-
-
 SELECT distinct product_id, unit_price as Max_Unit_Price
 from order_details
 where (product_id, unit_price) in 
@@ -78,3 +72,37 @@ order by product_id ASC;
 /*6.Extraed los 10 productos más caros
 Nos siguen pidiendo más queries correlacionadas. En este caso queremos saber cuáles son los 10 productos más caros.
 Los resultados esperados de esta query son:*/
+
+select product_name, unit_price
+from products
+order by unit_price DESC
+Limit 10
+;
+
+
+/* BONUS: 7. Qué producto es más popular
+Extraed cuál es el producto que más ha sido comprado y la cantidad que se compró.
+El resultado de esta query es:*/
+select sum(.quantity)
+from order_details
+group by product_id
+Limit 1;
+
+
+SELECT p.product_id,p.product_name , sum(o.quantity)
+from products as p join order_details as o  on p.product_id = o.product_id
+group by p.product_id, p.product_name
+order by sum(o.quantity) desc
+limit 1
+;
+
+
+
+
+
+
+
+
+
+
+
